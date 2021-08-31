@@ -304,23 +304,35 @@ app.get('/failsignup', (req, res) => {
 })
 
 app.get('/data', auth, (req, res) => {
-  const data = req.user._json
+  try {
+    const data = req.user._json
+    const name = req.user.username
+    console.log('data', data)
+    console.log('User name', name)
+    if (!data) {
+      res.json({ nombre: name })
+    }
+    else {
+      const dataUser = {
+        name: data.name,
+        email: data.email,
+        pic: data.picture.data.url
+      }
+      res.send(dataUser)
+    }
 
-  const dataUser = {
-    name: data.name,
-    email: data.email,
-    pic: data.picture.data.url
+
   }
-
-
-  res.send(dataUser)
+  catch (err) {
+    console.log(err)
+  }
 
 })
 
 app.get('/', auth, (req, res) => {
 
 
-  res.sendFile('public/index.html', { root: __dirname })
+  res.cookie('username', req.user.username).sendFile('public/index.html', { root: __dirname })
 
 })
 

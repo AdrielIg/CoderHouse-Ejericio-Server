@@ -97,7 +97,7 @@ const welcomeTemplate = Handlebars.compile(`
   {{/if}}
 `)
 /* To obtain cookie name */
-/* function getCookie(name) {
+function getCookie(name) {
   var nameEQ = name + "=";
   var ca = document.cookie.split(';');
   for (var i = 0; i < ca.length; i++) {
@@ -108,7 +108,7 @@ const welcomeTemplate = Handlebars.compile(`
   return null;
 }
 
-const cookieName = getCookie('name') */
+
 
 
 
@@ -121,14 +121,31 @@ const cookieName = getCookie('name') */
 } */
 
 async function fetchText() {
-  let response = await fetch('/data');
-  let data = await response.json();
-  const { name, email, pic } = data
 
+  try {
+    let response = await fetch('/data');
 
-  const welcomeHTML = welcomeTemplate({ name: name, email: email, pic: pic })
-  welcome.innerHTML = welcomeHTML
+    let data = await response.json();
+
+    if (data.name) {
+      const { name, email, pic } = data
+      const welcomeHTML = welcomeTemplate({ name: name, email: email, pic: pic })
+      welcome.innerHTML = welcomeHTML
+    }
+    else {
+
+      const welcomeHTML = welcomeTemplate({ name: data.nombre, email: '-', pic: '-' })
+      welcome.innerHTML = welcomeHTML
+    }
+
+  }
+
+  catch (err) {
+    console.log('Error:', err)
+
+  }
 }
+
 
 fetchText()
 
