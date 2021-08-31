@@ -67,7 +67,7 @@ dotenv.config();
 
 
 // Variables de entorno
-const PORT = process.argv[2] || 8080
+const PORT = process.argv[2] || process.env.PORT || 8080
 const FACEBOOK_CLIENT_ID = process.argv[4] || process.env.FACEBOOK_CLIENT_ID;
 const FACEBOOK_CLIENT_SECRET = process.argv[5] || process.env.FACEBOOK_CLIENT_SECRET;
 
