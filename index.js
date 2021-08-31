@@ -41,7 +41,7 @@ const advancedOptions = { useNewUrlParser: true, useUnifiedTopology: true }
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 /* Bcrypt */
-const bCrypt = require('bCrypt')
+const bCrypt = require('bcrypt')
 /* FACEBOOK STRATEGY */
 const FacebookStrategy = require('passport-facebook').Strategy;
 const dotenv = require('dotenv');
@@ -307,8 +307,6 @@ app.get('/data', auth, (req, res) => {
   try {
     const data = req.user._json
     const name = req.user.username
-    console.log('data', data)
-    console.log('User name', name)
     if (!data) {
       res.json({ nombre: name })
     }
