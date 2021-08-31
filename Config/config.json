@@ -1,0 +1,4 @@
+{
+  "MONGO_URL": "mongodb://localhost:27017/ecommerce",
+  "Mongo_Atlas": "mongodb+srv://adriel:<password>@cluster0.afgyq.mongodb.net/sesiones?retryWrites=true&w=majority"
+}

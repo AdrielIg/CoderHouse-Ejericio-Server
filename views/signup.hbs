@@ -1,0 +1,35 @@
+<section style='text-align: center; margin-top: 5rem'>
+      <h2>Sign Up</h2>  
+      
+      <form class="container" style="width: 40vw " action="/signup" method="POST" >
+        <div class="mb-3">
+          <label for="username" class="form-label">Username:</label>
+          <input type="text" name='username' class="form-control" id="username">
+        </div>
+        <div class="mb-3">
+          <label for="password" class="form-label">Password:</label>
+          <input type="text" name='password' class="form-control" id="password">
+        </div>
+        
+        <button type="submit" class="btn btn-primary" id='btn-name'>Enviar</button>
+      </form>
+      <div class="wrapper">
+        <a href='/login'><button class="btn btn-primary">Log In</button></a>
+      </div>
+    </section>
+    <style>
+    
+    h1 {
+        color: rgb(72, 72, 211);
+    }
+    hr {
+        background-color: #ddd;
+    }
+    .wrapper{
+      margin-top: 2rem;
+    }
+    .jumbotron {
+        min-height: 100vh;
+    }
+</style>
+

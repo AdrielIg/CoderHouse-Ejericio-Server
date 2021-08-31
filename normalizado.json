@@ -1,0 +1,25 @@
+{
+   "entities": {
+      "post": {
+         "undefined": {
+            "$init": true,
+            "email": "adrielgomezignacio@gmail.com",
+            "firstName": "Adriel",
+            "lastName": "Gomez",
+            "time": "2021-07-27T17:41:00.909Z"
+         }
+      },
+      "posts": {
+         "mensajes": {
+            "id": "mensajes",
+            "mensajes": [
+               null,
+               null,
+               null,
+               null
+            ]
+         }
+      }
+   },
+   "result": "mensajes"
+}
