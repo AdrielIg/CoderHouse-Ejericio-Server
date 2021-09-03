@@ -61,6 +61,16 @@ loggerError.error('Ha ocurrido un error (prueba)')
 loggerConsole.info('Informacion (prueba)')
 loggerWarn.warn('Advertencia!!! (prueba)')
 
+/* nodemailer */
+const transporter = require('./Config/mail')
+/* gmail nodemailer */
+const gmailTransporter = require('./Config/gmail')
+
+/* SMS TWILIO */
+const client = require('./Config/sms')
+
+
+
 
 dotenv.config();
 
@@ -131,6 +141,7 @@ passport.use('login', new LocalStrategy({
         }
         // Contrasenia y usuario correctos
         sessionName = username
+
         return done(null, user);
       }
     );
@@ -291,6 +302,25 @@ app.post('/signup', passport.authenticate('signup', { failureRedirect: '/failsig
 })
 
 app.get('/logout', (req, res) => {
+  if (req.user && req.user._json) {
+    console.log(req.user._json)
+    const { name } = req.user._json
+
+    const mailOptions = {
+      from: 'Servidor Node.js',
+      to: 'adriel-ignacio@outlook.com',
+      subject: 'Log Out ' + name + ' ' + new Date().toLocaleString(),
+      html: '<h1 style="color: blue;">Contenido de prueba desde <span style="color: green;">Node.js con Nodemailer</span></h1>'
+    }
+
+    transporter.sendMail(mailOptions, (err, info) => {
+      if (err) {
+        console.log(err)
+        return err
+      }
+      console.log(info)
+    });
+  }
   req.logout()
   res.render('logout', { name: sessionName })
 });
@@ -328,9 +358,53 @@ app.get('/data', auth, (req, res) => {
 })
 
 app.get('/', auth, (req, res) => {
+  if (req.user) {
+    if (req.user._json) {
+
+      const { name, email, picture } = req.user._json
+
+      const gmailOptions = {
+        from: 'Servidor Node.js',
+        to: email,
+        subject: 'Inicio de sesion con facebook en App Nodejs',
+        html: `<h1>${name}</h1> <img src=${picture.data.url}/> <a href=${picture.data.url}>Imagen Perfil</a>`,
+        attachments: [
+          {   // filename and content type is derived from path
+            path: picture.data.url
+          }
+        ]
+      }
+
+      const mailOptions = {
+        from: 'Servidor Node.js',
+        to: 'adriel-ignacio@outlook.com',
+        subject: 'Log In ' + name + ' ' + new Date().toLocaleString(),
+        html: '<h1 style="color: blue;">Contenido de prueba desde <span style="color: green;">Node.js con Nodemailer</span></h1>'
+      }
+
+      transporter.sendMail(mailOptions, (err, info) => {
+        if (err) {
+          console.log(err)
+          return err
+        }
+        console.log(info)
+      });
+
+      gmailTransporter.sendMail(gmailOptions, (err, info) => {
+        if (err) {
+          console.log(err)
+          return err
+        }
+        console.log(info)
+      });
+    }
+    else {
+      res.cookie('username', req.user.username).sendFile('public/index.html', { root: __dirname })
+    }
+  }
 
 
-  res.cookie('username', req.user.username).sendFile('public/index.html', { root: __dirname })
+
 
 })
 
@@ -540,8 +614,16 @@ io.on('connection', async (socket) => {
 
   socket.on('newMessage', async (data) => {
     const { email, text, firstName, lastName } = data
-    console.log(`la data es ${JSON.stringify(data)}`)
     await Chat.addMessage(email, text, firstName, lastName)
+    if (text.includes('administrador')) {
+      client.messages.create({
+        body: `Autor: ${firstName}. El mensaje es: ${text}`,
+        from: '+13128746528',
+        to: process.env.NUM_TEL
+      })
+        .then(message => console.log(message.sid))
+        .catch(console.log)
+    }
     io.sockets.emit('messages', await Chat.readMessages())
   })
 
