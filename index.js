@@ -28,7 +28,7 @@ const User = require('./modelos/users')
 /* Faker */
 const faker = require('faker');
 /* Normalizer */
-const { normalize, schema } = require('normalizr');
+/* const { normalize, schema } = require('normalizr'); */
 /* Cookie parser */
 const cookieParser = require('cookie-parser')
 const session = require('express-session')
@@ -68,8 +68,9 @@ const gmailTransporter = require('./Config/gmail')
 
 /* SMS TWILIO */
 const client = require('./Config/sms')
-
-
+/* GRAPHQL */
+const { graphqlHTTP } = require('express-graphql');
+const { schema, root } = require('./Graphql/graphql')
 
 
 dotenv.config();
@@ -107,6 +108,12 @@ app.use(session({
 
 
 }))
+
+app.use('/graphql', graphqlHTTP({
+  schema: schema,
+  rootValue: root,
+  graphiql: true
+}));
 
 
 
