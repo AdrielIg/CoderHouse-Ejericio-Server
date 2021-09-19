@@ -242,7 +242,7 @@ passport.deserializeUser(function (user, done) {
  */
 
 const middleWareId = async (req, res, next) => {
-  const id = Number(req.params.id)
+
   const product = await Products.getProduct(id)
   if (product) {
     next()
@@ -422,13 +422,17 @@ app.get('/', auth, (req, res) => {
 
 
 router.get('/productos/listar', async (req, res) => {
+
   try {
     const productos = await Products.getProducts()
+    console.log(productos)
     if (!productos.length) {
+
       res.json({ error: 'No hay productos cargados' })
     }
     else {
-      res.json(productos)
+      res.send(productos)
+      console.log(productos)
     }
 
   }
@@ -438,7 +442,7 @@ router.get('/productos/listar', async (req, res) => {
   }
 })
 //Listar Productos por ID
-router.get('/productos/listar/:id', middleWareId, async (req, res) => {
+router.get('/productos/listar/:id', async (req, res) => {
   const productId = req.params.id
   try {
     const product = await Products.getProduct(productId)
@@ -473,7 +477,7 @@ router.post('/productos/guardar', async (req, res) => {
 })
 
 //Borrar un producto segun id
-router.delete('/productos/borrar/:id', middleWareId, async (req, res) => {
+router.delete('/productos/borrar/:id', async (req, res) => {
   try {
     const id = req.params.id
     const productDeleted = await Products.deleteProduct(id)
@@ -486,7 +490,7 @@ router.delete('/productos/borrar/:id', middleWareId, async (req, res) => {
 
 
 //Actualizar producto por Id
-router.put('/productos/actualizar/:id', middleWareId, async (req, res) => {
+router.put('/productos/actualizar/:id', async (req, res) => {
   try {
     const id = req.params.id
     const { title, price, thumbnail } = req.body
